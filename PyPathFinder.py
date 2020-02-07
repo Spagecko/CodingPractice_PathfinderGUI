@@ -1,6 +1,6 @@
 import pygame
-from Functions import  cell, button, Resetbutton, intiGrid, updateGrid, Startbutton,  Endbutton,BFS, ReturnStartState
-
+from Functions import  *
+import collections
 #class to for cell info
  
 
@@ -75,7 +75,8 @@ while not done:
                     gridState[row][column].isWalled = False
 
             if (  20 <= row <= 23  and  13 <= column <= 18 ):
-               intiGrid(grid,gridState, screen) # reset button can be fixed later   
+               ResetGrid(grid, gridState,screen)
+
             if (  20 <= row <= 23  and  0 <= column <= 5 ):
                Startbutton(event, grid,gridState)
             if (  20 <= row <= 23  and  6 <= column <= 12 ):
@@ -83,8 +84,13 @@ while not done:
             if (  24 <= row <= 26  and  0 <= column <= 5 ):
                start = ReturnStartState(gridState)
                path = BFS(grid,gridState, start, screen)
-            
-                
+
+            if (  24 <= row <= 26  and  7 <= column <= 12 ):
+               start = ReturnStartState(gridState)
+               DFS(grid,gridState, start, screen)
+               
+               drawPath(grid, path)
+               
                   
             print("Click ", pos, "Grid coordinates: ", row, column)
             

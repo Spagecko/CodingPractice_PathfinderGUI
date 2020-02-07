@@ -27,6 +27,23 @@ def StartState(gridState):
                  return True
      return False
 
+def EndState(gridState):
+     for row in range(20):
+         for column in range(33):
+             if(gridState[row][column].isEndingPoint  == True):
+                 return True
+       
+     return False
+
+
+
+def ResetStartState(gridState):
+     for row in range(20):
+         for column in range(33):
+             if(gridState[row][column].isStartingPoint  == True):
+                 gridState[row][column].isStartingPoint = False
+     
+
 def Inti2d(gridState):
      for row in range(20):
          for column in range(33):
@@ -38,7 +55,7 @@ def ReturnStartState(gridState):
          for column in range(33):
              if(gridState[row][column].isStartingPoint  == True):
               
-               return row, column
+               return column, row
     
      return 0
 
@@ -46,12 +63,23 @@ def ReturnStartState(gridState):
                  
      
 
-def EndState(gridState):
+
+
+def ResetEndState(gridState):
      for row in range(20):
          for column in range(33):
              if(gridState[row][column].isEndingPoint  == True):
-                 return True
-     return False
+                 gridState[row][column].isEndingPoint  = False
+
+def ResetWallState(gridState):
+     for row in range(20):
+         for column in range(33):
+             if(gridState[row][column].isWalled  == True):
+                 gridState[row][column].isWalled  = False
+
+
+    
+
 
 
 
@@ -59,6 +87,8 @@ def EndState(gridState):
 
 #intilizes the grid
 def intiGrid(grid, gridState,screen):
+
+   
     for row in range(20):
     # Add an empty array that will hold each cell
     # in this row
@@ -69,6 +99,27 @@ def intiGrid(grid, gridState,screen):
     gridState =[[cell() for j  in range(33) ] for i in range(20)]
     Inti2d(gridState) # sets the rows and cols 
 #updates the graphic of the grid
+
+def ResetGrid(grid, gridState,screen):
+
+   
+    for row in range(20):
+    # Add an empty array that will hold each cell
+    # in this row
+       
+        for column in range(33):
+            grid[row][column] = 0
+
+    ResetStartState(gridState)
+    ResetEndState(gridState)
+    ResetWallState(gridState)
+   
+    # sets the rows and cols 
+#updates the graphic of the grid
+
+    
+
+
 def updateGrid(grid,screen):
     WIDTH = 15
     HEIGHT = 15
@@ -77,7 +128,7 @@ def updateGrid(grid,screen):
     PURPLE = (160, 13, 173)
     YELLOWGREEN = (153,186,0)
     GREEN = (0, 255, 0)
-
+    RED = (255, 0, 0)
     for row in range(20):
         for column in range(33):
             WHITE = (255, 255, 255)
@@ -98,6 +149,8 @@ def updateGrid(grid,screen):
                               (MARGIN + HEIGHT) * row + MARGIN,
                               WIDTH,
                               HEIGHT])
+
+
 #basic button template
 
 
@@ -238,17 +291,53 @@ def BFS(grid,gridState, start, screen):
         
         
         x, y = path[-1]
-        grid[y][x] = 4
-        gridState[y][x].visted  == True
+       
+        #gridState[y][x].visted  == True
       #  updateGrid(grid,screen)
        # time.sleep(.300)
         if gridState[y][x].isEndingPoint == True :
             return path
         for x2, y2 in ((x+1,y), (x-1,y), (x,y+1), (x,y-1)):
-            if 0 <= x2 < 32 and 0 <= y2 < 19 and (x2, y2) not in seen and gridState[y][x].isWalled == False :
+            if 0 <= x2 < 33 and 0 <= y2 < 20 and (x2, y2) not in seen and gridState[y][x].isWalled == False :
                 queue.append(path + [(x2, y2)])
                 seen.add((x2, y2))
+                if(grid[y][x] !=1 ):
+                    grid[y][x] = 4
+                   # gridState[y][x].visted  == True
 
-def drawPath(grid,path):
-    a = 0 
-  
+def DFS(grid,gridState, start, screen):
+    stack = deque()
+    stack.append(start)
+
+    while stack:
+
+        x , y = stack.pop()
+        if (gridState[y][x].isEndingPoint == True):
+            print("yes")
+
+        if(gridState[y][x].visted  != True):
+            gridState[y][x].visted  = True
+                
+            for x2, y2 in ((x+1,y), (x-1,y), (x,y+1), (x,y-1)):
+                    if 0 <= x2 < 33 and 0 <= y2 < 20 and (x2, y2) not in seen and gridState[y][x].isWalled == False :
+                        stack.append([x,y])
+
+
+
+    
+
+    
+    
+   
+
+
+
+                
+
+def drawPath(grid, path):
+
+      while len(path) !=0:
+        x,y =  path.pop()
+        grid[y][x] = 5 #change the grid state to 5 
+        print(x,y)
+       
